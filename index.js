@@ -1,6 +1,7 @@
 const express = require("express")
 const app = express();
-const api = require("./route")
+const api = require("./task/routes/api")
+const notes =require("./task/routes/notes")
 const mongoose = require("mongoose")
 const bodyParser = require('body-parser');
 // const router = express.Router();
@@ -13,4 +14,6 @@ console.log("connected success")
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended:false}));
 app.use("/",api)
+app.use("/note",notes)
 app.listen(8000,()=>console.log("succsessfull",8000));
+
