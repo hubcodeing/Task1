@@ -21,7 +21,7 @@ router.get("/",function(req,res){
 })
 
 router.post("/register", async (req, res) => {
-    console.log("hello")
+    console.log("hello",user)
     let user = await new Login();
     user.name = req.body.name
     user.email = req.body.email
