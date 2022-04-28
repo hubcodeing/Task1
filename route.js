@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get("/",function(req,res){
     Login.find({}).exec(function(err,user){
+        console.log(user)
         if(err) throw err
         else{
             if(!user){
