@@ -12,8 +12,7 @@ exports.login = async (req, res) => {
     res.json({ success: true, message: "register successfully", data: user });
   } catch (err) {
     console.log(err);
-    res.json({ success: false, message: "register successfully" });
-
+    res.json({ success: false, message: "register unsuccessfull" });
   }
 };
 exports.register = async (req, res) => {
@@ -28,5 +27,7 @@ exports.register = async (req, res) => {
     res.json({ success: true, token: token });
   } catch (err) {
     console.log(err);
+    res.json({ success: false, message: "login  unsuccessfull" });
+
   }
 };
