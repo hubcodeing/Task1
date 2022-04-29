@@ -11,11 +11,11 @@ exports.user = async (req, res) => {
 };
 exports.get = async function (req, res) {
   try {
-    const notes = await Notes.findOne({});
-    res.json({ success: true, message: "data get", data: notes });
+    const notes = await Notes.find({});
+    res.json({ success: true, message: "data get", notes });
   } catch (err) {
-    console.log(err);
     res.json({ success: false, message: err.message });
+    console.log(err);
   }
 };
 
@@ -34,8 +34,9 @@ exports.update = async function (req, res) {
 
 exports.note = async function (req, res) {
   try {
+    const data = await Notes.findById(req.params.id);
+    if (!data) throw new Error("id is not valid");
     const notes = await Notes.findByIdAndDelete({ _id: req.params.id });
-
     res.json({
       success: true,
       message: " data delete successfully",
