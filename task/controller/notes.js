@@ -11,7 +11,7 @@ exports.user = async (req, res) => {
 };
 exports.get = async function (req, res) {
   try {
-    const notes = await Notes.findOne({});
+    const notes = await Notes.find({});
     res.json({ success: true, message: "data get", data: notes });
   } catch (err) {
     console.log(err);
