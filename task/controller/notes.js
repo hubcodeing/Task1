@@ -12,11 +12,8 @@ exports.user = async (req, res) => {
 exports.get = async function (req, res) {
   try {
     const notes = await Notes.find({});
-<<<<<<< HEAD
-    res.json({ success: true, message: "data get", data: notes });
-=======
+
     res.json({ success: true, message: "data get", notes });
->>>>>>> 9c3fee2093bc473265db580235c498d289d2b52b
   } catch (err) {
     res.json({ success: false, message: err.message });
     console.log(err);
