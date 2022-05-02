@@ -12,6 +12,7 @@ exports.user = async (req, res) => {
 exports.get = async function (req, res) {
   try {
     const notes = await Notes.find({});
+
     res.json({ success: true, message: "data get", notes });
   } catch (err) {
     res.json({ success: false, message: err.message });
@@ -44,5 +45,86 @@ exports.note = async function (req, res) {
     });
   } catch (err) {
     res.json({ success: false, message: err.message });
+  }
+};
+
+exports.match = async function (req, res) {
+  try {
+    const notes = await Notes.aggregate([{ $match: { title: "IPL" } }]);
+    console.log(notes);
+    res.json({ success: true, message: "data get", notes });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+    console.log(err);
+  }
+};
+exports.project = async function (req, res) {
+  try {
+    const notes = await Notes.aggregate([
+      { $project: { _id: 0, discription: 1 } },
+    ]);
+    console.log(notes);
+
+    res.json({ success: true, message: "data get", notes });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+    console.log(err);
+  }
+};
+
+exports.addfilds = async function (req, res) {
+  try {
+    const notes = await Notes.aggregate([{ $addFields: { age: 50 } }]);
+    console.log(notes);
+
+    res.json({ success: true, message: "data get", notes });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+    console.log(err);
+  }
+};
+exports.size = async function (req, res) {
+  try {
+    const notes = await Notes.aggregate([
+      {
+        $project: {
+          age: 1,
+          numberOfAge: {
+            $cond: {
+              if: { $isArray: "$age" },
+              then: { $size: "$age" },
+              else: "NA",
+            },
+          },
+        },
+      },
+    ]);
+    console.log(notes);
+
+    res.json({ success: true, message: "data get", notes });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+    console.log(err);
+  }
+};
+
+exports.look = async function (req, res) {
+  try {
+    const notes = await Notes.aggregate([
+      {
+        $lookup: {
+          from: "logins",
+          localField: "userId",
+          foreignField: "_id",
+          as: "new_docs",
+        },
+      },
+    ]);
+    console.log(notes);
+
+    res.json({ success: true, message: "data get", notes });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+    console.log(err);
   }
 };
