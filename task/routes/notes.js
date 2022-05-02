@@ -12,12 +12,16 @@ const {
   addfilds,
   size,
   look,
+  lookup,
+  getid,
 } = require("../controller/notes");
 const Notes = require("../models/notes");
 
 router.post("/", user);
 
 router.get("/getnotes", get);
+
+router.get("/getnotes/:id", getid);
 
 router.put("/:id", update);
 
@@ -32,5 +36,7 @@ router.get("/addfilds", addfilds);
 router.get("/size", size);
 
 router.get("/look", look);
+
+router.get("/lookup", lookup);
 
 module.exports = router;

@@ -1,18 +1,17 @@
 const Login = require("../models/user");
 const jwt = require("jsonwebtoken");
 var secret = "login";
+const { userRegistrationSchema } = require("../models/joi");
 exports.login = async (req, res) => {
   try {
-    let user = new Login();
-    user.name = req.body.name;
-    user.email = req.body.email;
-    user.password = req.body.password;
-    user.phone = req.body.phone;
+    const data = await userRegistrationSchema.validateAsync(req.body);
+    console.log(data);
+    let user = await new Login(req.body);
     await user.save();
     res.json({ success: true, message: "register successfully", data: user });
   } catch (err) {
     console.log(err);
-    res.json({ success: false, message: "register unsuccessfull" });
+    res.json({ success: false, message: err.message });
   }
 };
 exports.register = async (req, res) => {
@@ -28,6 +27,5 @@ exports.register = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({ success: false, message: "login  unsuccessfull" });
-
   }
 };
