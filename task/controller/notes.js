@@ -121,7 +121,7 @@ exports.look = async function (req, res) {
     const notes = await Notes.aggregate([
       {
         $match: {
-          userId: mongoose.Types.ObjectId("62693804dfd9e1233be343bc"),
+          userId: mongoose.Types.ObjectId(req.body.id),
         },
       },
       {
