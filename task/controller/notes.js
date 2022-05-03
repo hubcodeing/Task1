@@ -108,7 +108,6 @@ exports.size = async function (req, res) {
         },
       },
     ]);
-    console.log(notes);
 
     res.json({ success: true, message: "data get", notes });
   } catch (err) {
