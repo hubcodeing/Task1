@@ -65,7 +65,7 @@ exports.note = async function (req, res) {
 exports.match = async function (req, res) {
   try {
     const notes = await Notes.aggregate([
-      { $match: { title: "IPL", discription: "MI vs kkr" } },
+      { $match: { title: req.body.title } },
     ]);
     res.json({ success: true, message: "data get", notes });
   } catch (err) {
@@ -156,7 +156,7 @@ exports.lookup = async function (req, res) {
     const notes = await Login.aggregate([
       {
         $match: {
-          _id: mongoose.Types.ObjectId("62693804dfd9e1233be343bc"),
+          _id: mongoose.Types.ObjectId(req.body.id),
         },
       },
 
