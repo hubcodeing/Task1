@@ -14,12 +14,18 @@ const {
   look,
   lookup,
   getid,
+  combine,
+  all,
 } = require("../controller/notes");
 const Notes = require("../models/notes");
 
 router.post("/", user);
 
+router.post("/combine", combine);
+
 router.get("/getnotes", get);
+
+router.get("/title", all);
 
 router.get("/getnotes/:id", getid);
 

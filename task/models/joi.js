@@ -12,8 +12,14 @@ const userNotesSchema = Joi.object().keys({
   age: Joi.string().max(2).required(),
   userId: Joi.string().required(),
 });
-
+const updateNotesSchema = Joi.object().keys({
+  title: Joi.string().min(3).max(20).required(),
+  discription: Joi.string().min(5).required(),
+  age: Joi.string().max(2).required(),
+  userId: Joi.string(),
+});
 module.exports = {
   userRegistrationSchema,
   userNotesSchema,
+  updateNotesSchema,
 };
