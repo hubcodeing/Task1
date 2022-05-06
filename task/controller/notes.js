@@ -1,13 +1,9 @@
 const { default: mongoose } = require("mongoose");
 const Notes = require("../models/notes");
 const Login = require("../models/user");
-const { login } = require("./user");
-const { userNotesSchema, updateNotesSchema } = require("../models/joi");
-const { object } = require("joi");
 exports.user = async (req, res) => {
   try {
-    const joi = await userNotesSchema.validateAsync(req.body);
-    const notes = await new Notes(joi);
+    const notes = await Notes({ ...req.body, userId: req.user._id });
     const data = await notes.save();
     res.json({ success: true, message: " data post  successfully", data });
   } catch (error) {
@@ -17,7 +13,6 @@ exports.user = async (req, res) => {
 exports.get = async function (req, res) {
   try {
     const notes = await Notes.find({});
-
     res.json({ success: true, message: "data get", notes });
   } catch (err) {
     res.json({ success: false, message: err.message });
@@ -50,9 +45,8 @@ exports.update = async function (req, res) {
 
 exports.note = async function (req, res) {
   try {
-    const data = await Notes.findById(req.params.id);
-    if (!data) throw new Error("id is not valid");
-    const notes = await Notes.findByIdAndDelete({ _id: req.params.id });
+    const notes = await Notes.findByIdAndDelete(req.params.id);
+    if (!notes) throw new Error("id is not found");
     res.json({
       success: true,
       message: " data delete successfully",
@@ -120,11 +114,6 @@ exports.look = async function (req, res) {
   try {
     const notes = await Notes.aggregate([
       {
-        $match: {
-          userId: mongoose.Types.ObjectId(req.body.id),
-        },
-      },
-      {
         $lookup: {
           from: "logins",
           localField: "userId",
@@ -180,12 +169,10 @@ exports.combine = async function (req, res) {
   try {
     const id = req.body.id;
     if (!id) {
-      const joi = await userNotesSchema.validateAsync(req.body);
-      const data = await new Notes.create(joi);
+      const data = await Notes.create({ ...req.body, userId: req.body.id });
       res.json({ success: true, message: "post", data });
     } else {
       const data = await Notes.findByIdAndUpdate(id, req.body);
-      console.log(data);
       res.json({ success: true, message: "id update", data });
     }
   } catch (err) {
@@ -195,15 +182,32 @@ exports.combine = async function (req, res) {
 
 exports.all = async function (req, res) {
   try {
-    const data = await Notes.find({
-      title: req.body.title,
-      discription: req.body.discription,
-    });
-    if (!data) {
-      const user = await Notes.find({});
-      res.json({ success: true, message: "data found successs", user });
+    const data = req.body;
+    if (data) {
+      const notes = await Notes.find(data);
+      res.json({ success: true, message: "title get ", notes });
+    } else {
+      const notes = await Notes.find({});
+      res.json({ success: true, message: "data get", notes });
     }
-    res.json({ success: true, message: "title get ", data });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+};
+exports.jjj = async function (req, res) {
+  try {
+    let filter = {};
+    if (req.query.title) {
+      filter = { ...filter, title: req.query.title };
+    }
+    if (req.query.discription) {
+      filter = { ...filter, discription: req.query.discription };
+    }
+    if (req.query.age) {
+      filter = { ...filter, age: req.query.age };
+    }
+    const notes = await Notes.find(filter);
+    res.json({ success: true, message: "title get ", notes });
   } catch (err) {
     res.json({ success: false, message: err.message });
   }
