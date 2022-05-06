@@ -15,7 +15,7 @@ const {
   lookup,
   getid,
   combine,
-  all,
+  jjj,
 } = require("../controller/notes");
 const { userNotesSchema } = require("../middleware/joi");
 const Notes = require("../models/notes");
@@ -27,7 +27,7 @@ router.post("/combine", auth, userNotesSchema, combine);
 
 router.get("/getnotes", auth, get);
 
-router.get("/title", auth, all);
+router.get("/title", jjj);
 
 router.get("/getnotes/:id", auth, getid);
 

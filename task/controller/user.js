@@ -36,7 +36,10 @@ exports.getid = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const notes = await Login.findByIdAndUpdate(req.params.id, req.body);
+    const notes = await Login.findByIdAndUpdate(
+      { _id: req.params.id },
+      req.body
+    );
     res.json({ success: true, message: "data update successfully ", notes });
   } catch (error) {
     res.json({ success: false, message: error.message });
