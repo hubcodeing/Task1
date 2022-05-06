@@ -2,12 +2,9 @@ const { default: mongoose } = require("mongoose");
 const Notes = require("../models/notes");
 const Login = require("../models/user");
 const { login } = require("./user");
-const { userNotesSchema, updateNotesSchema } = require("../models/joi");
-const { object } = require("joi");
 exports.user = async (req, res) => {
   try {
-    const joi = await userNotesSchema.validateAsync(req.body);
-    const notes = await new Notes(joi);
+    const notes = await Notes({ ...req.body, userId: req.user._id });
     const data = await notes.save();
     res.json({ success: true, message: " data post  successfully", data });
   } catch (error) {
@@ -50,9 +47,9 @@ exports.update = async function (req, res) {
 
 exports.note = async function (req, res) {
   try {
-    const data = await Notes.findById(req.params.id);
-    if (!data) throw new Error("id is not valid");
-    const notes = await Notes.findByIdAndDelete({ _id: req.params.id });
+    const notes = await Notes.findByIdAndDelete(req.params.id);
+    console.log(notes);
+    if (!notes) throw new Error("id is not found");
     res.json({
       success: true,
       message: " data delete successfully",
@@ -120,11 +117,6 @@ exports.look = async function (req, res) {
   try {
     const notes = await Notes.aggregate([
       {
-        $match: {
-          userId: mongoose.Types.ObjectId(req.body.id),
-        },
-      },
-      {
         $lookup: {
           from: "logins",
           localField: "userId",
@@ -180,12 +172,10 @@ exports.combine = async function (req, res) {
   try {
     const id = req.body.id;
     if (!id) {
-      const joi = await userNotesSchema.validateAsync(req.body);
-      const data = await new Notes.create(joi);
+      const data = await Notes.create({ ...req.body, userId: user._id });
       res.json({ success: true, message: "post", data });
     } else {
       const data = await Notes.findByIdAndUpdate(id, req.body);
-      console.log(data);
       res.json({ success: true, message: "id update", data });
     }
   } catch (err) {

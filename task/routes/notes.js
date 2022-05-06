@@ -17,32 +17,34 @@ const {
   combine,
   all,
 } = require("../controller/notes");
+const { userNotesSchema } = require("../middleware/joi");
 const Notes = require("../models/notes");
+const auth = require("../middleware/auth");
 
-router.post("/", user);
+router.post("/", auth, userNotesSchema, user);
 
-router.post("/combine", combine);
+router.post("/combine", auth, userNotesSchema, combine);
 
-router.get("/getnotes", get);
+router.get("/getnotes", auth, get);
 
-router.get("/title", all);
+router.get("/title", auth, all);
 
-router.get("/getnotes/:id", getid);
+router.get("/getnotes/:id", auth, getid);
 
-router.put("/:id", update);
+router.put("/:id", auth, update);
 
-router.delete("/:id", note);
+router.delete("/:id", auth, note);
 
-router.get("/match", match);
+router.get("/match", auth, match);
 
-router.get("/project", project);
+router.get("/project", auth, project);
 
-router.get("/addfilds", addfilds);
+router.get("/addfilds", auth, addfilds);
 
-router.get("/size", size);
+router.get("/size", auth, size);
 
-router.get("/look", look);
+router.get("/look", auth, look);
 
-router.get("/lookup", lookup);
+router.get("/lookup", auth, lookup);
 
 module.exports = router;
