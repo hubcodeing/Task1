@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const Notes = require("../models/notes");
 const Login = require("../models/user");
+const { ObjectId } = require("mongodb");
 exports.user = async (req, res) => {
   try {
     const notes = await Notes({ ...req.body, userId: req.user._id });
@@ -60,7 +61,7 @@ exports.note = async function (req, res) {
 exports.match = async function (req, res) {
   try {
     const notes = await Notes.aggregate([
-      { $match: { title: req.body.title } },
+      { $match: { _id: mongoose.Types.ObjectId(req.body.id) } },
     ]);
     res.json({ success: true, message: "data get", notes });
   } catch (err) {
@@ -182,14 +183,14 @@ exports.combine = async function (req, res) {
 exports.jjj = async function (req, res) {
   try {
     let filter = {};
-    if (req.body.title) {
-      filter = { ...filter, title: req.body.title };
+    if (req.query.title) {
+      filter = { ...filter, title: req.query.title };
     }
-    if (req.body.discription) {
-      filter = { ...filter, discription: req.body.discription };
+    if (req.query.discription) {
+      filter = { ...filter, discription: req.query.discription };
     }
-    if (req.body.age) {
-      filter = { ...filter, age: req.body.age };
+    if (req.query.age) {
+      filter = { ...filter, age: req.query.age };
     }
     const notes = await Notes.find(filter);
     res.json({ success: true, message: "title get ", notes });
