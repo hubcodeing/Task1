@@ -179,32 +179,17 @@ exports.combine = async function (req, res) {
     res.json({ success: false, message: err.message });
   }
 };
-
-exports.all = async function (req, res) {
-  try {
-    const data = req.body;
-    if (data) {
-      const notes = await Notes.find(data);
-      res.json({ success: true, message: "title get ", notes });
-    } else {
-      const notes = await Notes.find({});
-      res.json({ success: true, message: "data get", notes });
-    }
-  } catch (err) {
-    res.json({ success: false, message: err.message });
-  }
-};
 exports.jjj = async function (req, res) {
   try {
     let filter = {};
-    if (req.query.title) {
-      filter = { ...filter, title: req.query.title };
+    if (req.body.title) {
+      filter = { ...filter, title: req.body.title };
     }
-    if (req.query.discription) {
-      filter = { ...filter, discription: req.query.discription };
+    if (req.body.discription) {
+      filter = { ...filter, discription: req.body.discription };
     }
-    if (req.query.age) {
-      filter = { ...filter, age: req.query.age };
+    if (req.body.age) {
+      filter = { ...filter, age: req.body.age };
     }
     const notes = await Notes.find(filter);
     res.json({ success: true, message: "title get ", notes });
