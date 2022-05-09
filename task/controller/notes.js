@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const Notes = require("../models/notes");
 const Login = require("../models/user");
+const { ObjectId } = require("mongodb");
 exports.user = async (req, res) => {
   try {
     const notes = await Notes({ ...req.body, userId: req.user._id });
@@ -60,7 +61,7 @@ exports.note = async function (req, res) {
 exports.match = async function (req, res) {
   try {
     const notes = await Notes.aggregate([
-      { $match: { title: req.body.title } },
+      { $match: { _id: mongoose.Types.ObjectId(req.body.id) } },
     ]);
     res.json({ success: true, message: "data get", notes });
   } catch (err) {
@@ -174,21 +175,6 @@ exports.combine = async function (req, res) {
     } else {
       const data = await Notes.findByIdAndUpdate(id, req.body);
       res.json({ success: true, message: "id update", data });
-    }
-  } catch (err) {
-    res.json({ success: false, message: err.message });
-  }
-};
-
-exports.all = async function (req, res) {
-  try {
-    const data = req.body;
-    if (data) {
-      const notes = await Notes.find(data);
-      res.json({ success: true, message: "title get ", notes });
-    } else {
-      const notes = await Notes.find({});
-      res.json({ success: true, message: "data get", notes });
     }
   } catch (err) {
     res.json({ success: false, message: err.message });
