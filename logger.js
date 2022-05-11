@@ -1,10 +1,9 @@
 const winston = require("winston");
 require("dotenv").config();
+const info = new Date().toDateString() + "-" + "info";
+const error = new Date().toDateString() + "-" + "error";
+console.log(info);
 const folderName = process.env.FOLDER;
-const info =
-  new Date().toISOString().toString().replace(":", "-") + "-" + "info";
-const error =
-  new Date().toISOString().toString().replace(":", "-") + "-" + "error";
 
 module.exports = {
   infoLogger: winston.createLogger({

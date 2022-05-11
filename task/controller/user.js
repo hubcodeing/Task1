@@ -41,8 +41,7 @@ exports.csvfileUpload = async (req, res) => {
         employee.insertMany(Tutorial);
         fs.unlinkSync(path);
       });
-
-    // const user = await Login.create({ profile_file: req.file.filename });
+    infoLogger.info(req.file);
     res.status(200).json({
       success: true,
       message: "csv file uplaod successfully",
