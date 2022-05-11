@@ -7,6 +7,7 @@ const userRegistrationSchema = async (req, res, next) => {
     email: Joi.string().email().required(),
     password: Joi.string().min(8).max(10).required(),
     phone: Joi.string().min(10).required(),
+    profile_file: Joi.string(),
   });
   validateSchema(req, res, next, Schema);
 };

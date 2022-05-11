@@ -18,6 +18,12 @@ const loginSchema = mongoose.Schema({
     type: Number,
     require: true,
   },
+  profile_file: {
+    type: String,
+  },
+  profile_url: {
+    type: String,
+  },
 });
 const Login = mongoose.model("Login", loginSchema);
 module.exports = Login;
