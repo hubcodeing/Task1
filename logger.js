@@ -1,9 +1,16 @@
 const winston = require("winston");
+require("dotenv").config();
+const folderName = process.env.FOLDER;
+const info =
+  new Date().toISOString().toString().replace(":", "-") + "-" + "info";
+const error =
+  new Date().toISOString().toString().replace(":", "-") + "-" + "error";
+
 module.exports = {
   infoLogger: winston.createLogger({
     transports: new winston.transports.File({
       level: "info",
-      filename: "2022-05-09-info.log",
+      filename: `${folderName}/${info}`,
       json: true,
       format: winston.format.combine(
         winston.format.timestamp(),
@@ -14,7 +21,7 @@ module.exports = {
   errorLogger: winston.createLogger({
     transports: new winston.transports.File({
       level: "error",
-      filename: "2022-05-09-error.log",
+      filename: `${folderName}/${error}`,
       json: true,
       format: winston.format.combine(
         winston.format.timestamp(),

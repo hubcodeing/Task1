@@ -23,7 +23,7 @@ exports.register = async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 };
-exports.name = async (req, res) => {
+exports.csvfileUpload = async (req, res) => {
   try {
     let Tutorial = [];
     let path = __basedir + "/file/" + req.file.filename;
@@ -42,18 +42,12 @@ exports.name = async (req, res) => {
         fs.unlinkSync(path);
       });
 
-    let data = new Login();
-    data.password = req.body.password;
-    data.email = req.body.email;
-    data.phone = req.body.phone;
-    data.name = req.body.name;
-    data.profile_file = req.file.filename;
-    data.profile_url = "http://localhost:8000/upload/" + req.file.filename;
-    data.save();
-    infoLogger.info(data);
-    res
-      .status(200)
-      .json({ success: true, message: "register successfully", data: data });
+    // const user = await Login.create({ profile_file: req.file.filename });
+    res.status(200).json({
+      success: true,
+      message: "csv file uplaod successfully",
+      data: user,
+    });
   } catch (error) {
     errorLogger.error(error.message);
     res.status(400).json({ success: false, message: error.message });

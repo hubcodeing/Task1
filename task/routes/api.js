@@ -8,7 +8,7 @@ const {
   getid,
   update,
   pop,
-  name,
+  csvfileUpload,
 } = require("../controller/user");
 const { userRegistrationSchema } = require("../middleware/joi");
 const auth = require("../middleware/auth");
@@ -16,7 +16,7 @@ const upload = require("../middleware/upload");
 
 router.put("/update/:id", auth, userRegistrationSchema, update);
 router.post("/register", upload, userRegistrationSchema, register);
-router.post("/", upload, name);
+router.post("/", upload, csvfileUpload);
 router.post("/login", login);
 router.get("/getid/:id", auth, getid);
 router.delete("/delete/:id", auth, pop);
