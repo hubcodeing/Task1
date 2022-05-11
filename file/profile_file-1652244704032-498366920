@@ -1,5 +1,0 @@
-employeeid,firstName,lastName,jobTitle,costCenter,workEmail,managementLevel,leadersCommittee,hireDate,homeAddressStreet1,homeAddressStreet2,homeAddressCity,homeAddressState,homeAddressPostalCode,homeAddressCountry,terminationDate,isActive,createdAt,updatedAt,locationCode,jobCode,jobProfile,jobLevel,jobFamily,jobFamilyGroup,department,mobile,roleId,notifyOrder,notifyAsset,updatedBy,managerId
-1,Alex,Jorden,Senior executive,,alex.jorden@gmail.com,,,,1369 Cherrywood Sq,Campbell Area,Sanjose,California,95117,United States,,TRUE,,,,,,,,,,4567735677,,,,,
-2,Julia,Jacson,Executive assistant,,julia.jacson@hotmail.com,,,,2989 Solleman RD,Campbell Area,Sanjose,California,95117,United States,,TRUE,,,,,,,,,,4655769974,,,,,
-3,Petrica,Julian,Content Writer,,petricajulian@yahoo.com,,,,8766 Brookewest Street,Well Street Anexy,Albama,Moody,35004,United States,,TRUE,,,,,,,,,,4533445678,,,,,
-4,Mical,Walter,Analyst,,micalwalter@gmail.com,,,,8809 Wall Street Anaxy,Campbell Area,Sanjose,California,95117,United States,,TRUE,,,,,,,,,,4567735678,,,,,

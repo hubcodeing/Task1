@@ -5,7 +5,7 @@ const fs = require("fs");
 const csv = require("csv-parser");
 const { infoLogger, errorLogger } = require("../../logger");
 const { user } = require("./notes");
-const { insertMany } = require("../models/user");
+const { insertMany, remove } = require("../models/user");
 require("dotenv").config();
 const secret = process.env.SECRET;
 const employee = require("../models/employee");
@@ -15,19 +15,20 @@ exports.register = async (req, res) => {
   try {
     let user = await Login.create(req.body, req.files);
     infoLogger.info(user);
-    res.json({ success: true, message: "register successfully", data: user });
+    res
+      .status(200)
+      .json({ success: true, message: "register successfully", data: user });
   } catch (error) {
     errorLogger.error(error.message);
-    res.json({ success: false, message: error.message });
+    res.status(400).json({ success: false, message: error.message });
   }
 };
 exports.name = async (req, res) => {
   try {
     let Tutorial = [];
     let path = __basedir + "/file/" + req.file.filename;
-    console.log("path", path);
-    const user = fs
-      .createReadStream(path)
+    // console.log("path", path);
+    fs.createReadStream(path)
       .pipe(csv())
       .on("error", (error) => {
         throw error.message;
@@ -36,9 +37,11 @@ exports.name = async (req, res) => {
         Tutorial.push(row);
       })
       .on("end", () => {
-        console.log("todos", Tutorial);
+        // console.log("todos", Tutorial);
         employee.insertMany(Tutorial);
+        fs.unlinkSync(path);
       });
+
     let data = new Login();
     data.password = req.body.password;
     data.email = req.body.email;
@@ -46,14 +49,14 @@ exports.name = async (req, res) => {
     data.name = req.body.name;
     data.profile_file = req.file.filename;
     data.profile_url = "http://localhost:8000/upload/" + req.file.filename;
-    console.log(req.file.filename);
     data.save();
-    console.log(user);
     infoLogger.info(data);
-    res.json({ success: true, message: "register successfully", data: data });
+    res
+      .status(200)
+      .json({ success: true, message: "register successfully", data: data });
   } catch (error) {
     errorLogger.error(error.message);
-    res.json({ success: false, message: error.message });
+    res.status(400).json({ success: false, message: error.message });
   }
 };
 exports.login = async (req, res) => {
@@ -61,15 +64,17 @@ exports.login = async (req, res) => {
     const user = await Login.findOne({ email: req.body.email });
     if (!user) {
       errorLogger.error(err.message);
-      return res.json({ success: false, message: "user is already login" });
+      return res
+        .status(200)
+        .json({ success: false, message: "user is already login" });
     } else
       var token = jwt.sign({ email: user.email, id: user._id }, secret, {
         expiresIn: "1h",
       });
     infoLogger.info(user);
-    res.json({ success: true, token: token });
+    res.status(200).json({ success: true, token: token });
   } catch (err) {
-    res.json({ success: false, message: "login  unsuccessfull" });
+    res.status(400).json({ success: false, message: "login  unsuccessfull" });
   }
 };
 
@@ -78,10 +83,10 @@ exports.getid = async function (req, res) {
     const notes = await Login.findById(req.params.id);
     if (!notes) throw new Error("data not find ");
     else infoLogger.info(notes);
-    res.json({ success: true, message: "data get", notes });
+    res.status(200).json({ success: true, message: "data get", notes });
   } catch (err) {
     errorLogger.error(err);
-    res.json({ success: false, message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 exports.update = async function (req, res) {
@@ -92,10 +97,12 @@ exports.update = async function (req, res) {
     );
     console.log(notes);
     infoLogger.info(notes);
-    res.json({ success: true, message: "data update successfully ", notes });
+    res
+      .status(200)
+      .json({ success: true, message: "data update successfully ", notes });
   } catch (error) {
     errorLogger.error(error.message);
-    res.json({ success: false, message: error.message });
+    res.status(400).json({ success: false, message: error.message });
   }
 };
 exports.pop = async function (req, res) {
@@ -109,6 +116,6 @@ exports.pop = async function (req, res) {
     errorLogger.error(err.message);
     console.log("HELLO", err);
 
-    res.json({ success: false, message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };

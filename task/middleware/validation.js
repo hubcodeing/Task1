@@ -5,7 +5,7 @@ module.exports = async (req, res, next, Schema) => {
       req.body = value;
       next();
     } catch (error) {
-      res.json({ success: false, message: error.message });
+      res.status(400).json({ success: false, message: error.message });
     }
   }
 };

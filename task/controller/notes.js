@@ -8,19 +8,21 @@ exports.user = async (req, res) => {
     infoLogger.info(req.body, req.user._id);
     const notes = await Notes({ ...req.body, userId: req.user._id });
     const data = await notes.save();
-    res.json({ success: true, message: " data post  successfully", data });
+    res
+      .status(200)
+      .json({ success: true, message: " data post  successfully", data });
   } catch (error) {
     errorLogger.error(error.message);
-    res.json({ success: false, message: error.message });
+    res.status(400).json({ success: false, message: error.message });
   }
 };
 exports.get = async function (req, res) {
   try {
     const notes = await Notes.find({});
-    res.json({ success: true, message: "data get", notes });
+    res.status(200).json({ success: true, message: "data get", notes });
   } catch (err) {
     errorLogger.error(err.message);
-    res.json({ success: false, message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 exports.getid = async function (req, res) {
@@ -28,10 +30,10 @@ exports.getid = async function (req, res) {
     infoLogger.info(req.params.id);
     const notes = await Notes.findById(req.params.id);
     if (!notes) throw new Error("data not find ");
-    else res.json({ success: true, message: "data get", notes });
+    else res.status(200).json({ success: true, message: "data get", notes });
   } catch (err) {
     errorLogger.error(err.message);
-    res.json({ success: false, message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 
@@ -44,14 +46,14 @@ exports.update = async function (req, res) {
       req.body
     );
     const data = await notes.save();
-    res.json({
+    res.status(200).json({
       success: true,
       message: "data update    in notes",
       data,
     });
   } catch (error) {
     errorLogger.error(error.message);
-    res.json({ success: false, message: error.message });
+    res.status(400).json({ success: false, message: error.message });
   }
 };
 
@@ -59,14 +61,14 @@ exports.note = async function (req, res) {
   try {
     const notes = await Notes.findByIdAndDelete(req.params.id);
     if (!notes) throw new Error("id is not found");
-    res.json({
+    res.status(200).json({
       success: true,
       message: " data delete successfully",
       data: notes,
     });
   } catch (err) {
     errorLogger.error(err.message);
-    res.json({ success: false, message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 
@@ -76,10 +78,10 @@ exports.match = async function (req, res) {
       { $match: { _id: mongoose.Types.ObjectId(req.body.id) } },
     ]);
     infoLogger.info(notes);
-    res.json({ success: true, message: "data get", notes });
+    res.status(200).json({ success: true, message: "data get", notes });
   } catch (err) {
     errorLogger.error(err.message);
-    res.json({ success: false, message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 exports.project = async function (req, res) {
@@ -89,10 +91,10 @@ exports.project = async function (req, res) {
     ]);
 
     infoLogger.info(notes);
-    res.json({ success: true, message: "data get", notes });
+    res.status(200).json({ success: true, message: "data get", notes });
   } catch (err) {
     errorLogger.error(err.message);
-    res.json({ success: false, message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 
@@ -100,10 +102,10 @@ exports.addfilds = async function (req, res) {
   try {
     const notes = await Notes.aggregate([{ $addFields: { age: 50 } }]);
     infoLogger.info(notes);
-    res.json({ success: true, message: "data get", notes });
+    res.status(200).json({ success: true, message: "data get", notes });
   } catch (err) {
     errorLogger.error(err.message);
-    res.json({ success: false, message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 exports.size = async function (req, res) {
@@ -123,10 +125,10 @@ exports.size = async function (req, res) {
       },
     ]);
     infoLogger.info(notes);
-    res.json({ success: true, message: "data get", notes });
+    res.status(200).json({ success: true, message: "data get", notes });
   } catch (err) {
     errorLogger.error(err.message);
-    res.json({ success: false, message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 
@@ -155,10 +157,10 @@ exports.look = async function (req, res) {
       },
     ]);
     infoLogger.info(notes);
-    res.json({ success: true, message: "data get", notes });
+    res.status(200).json({ success: true, message: "data get", notes });
   } catch (err) {
     errorLogger.error(err.message);
-    res.json({ success: false, message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 exports.lookup = async function (req, res) {
@@ -181,10 +183,10 @@ exports.lookup = async function (req, res) {
       { $addFields: { Total: { $size: { $ifNull: ["$NotesData", []] } } } },
     ]);
     infoLogger.info(notes);
-    res.json({ success: true, message: "data get", notes });
+    res.status(200).json({ success: true, message: "data get", notes });
   } catch (err) {
     errorLogger.error(err.message);
-    res.json({ success: false, message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 exports.combine = async function (req, res) {
@@ -193,15 +195,15 @@ exports.combine = async function (req, res) {
     if (!id) {
       const data = await Notes.create({ ...req.body, userId: req.body.id });
       infoLogger.info(data);
-      res.json({ success: true, message: "post", data });
+      res.status(200).json({ success: true, message: "post", data });
     } else {
       const data = await Notes.findByIdAndUpdate(id, req.body);
       infoLogger.info(data);
-      res.json({ success: true, message: "id update", data });
+      res.status(200).json({ success: true, message: "id update", data });
     }
   } catch (err) {
     errorLogger.error(err.message);
-    res.json({ success: false, message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 exports.jjj = async function (req, res) {
@@ -218,9 +220,9 @@ exports.jjj = async function (req, res) {
     }
     const notes = await Notes.find(filter);
     infoLogger.info(notes);
-    res.json({ success: true, message: "title get ", notes });
+    res.status(200).json({ success: true, message: "title get ", notes });
   } catch (err) {
     errorLogger.error(err.message);
-    res.json({ success: false, message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
