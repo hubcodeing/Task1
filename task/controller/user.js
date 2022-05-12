@@ -1,21 +1,24 @@
-const Login = require("../models/user");
-const jwt = require("jsonwebtoken");
-const path = require("path");
-const fs = require("fs");
-const csv = require("csv-parser");
-const { infoLogger, errorLogger } = require("../../logger");
-const { user } = require("./notes");
-const { insertMany, remove } = require("../models/user");
+import Login from "../models/user";
+import jwt from "jsonwebtoken";
+import path from "path";
+import fs from "fs";
+import csv from "csv-parser";
+import { infoLogger, errorLogger } from "../../logger";
+import upload from "../middleware/upload";
+import { user } from "./notes";
+import employee from "../models/employee";
+import generator from "generate-password";
+import nodemailer from "nodemailer";
 require("dotenv").config();
 const secret = process.env.SECRET;
 const HOST = process.env.HOST;
-const upload = require("../middleware/upload");
-
-const employee = require("../models/employee");
+const email = process.env.EMAIL;
+const name = process.env.PASS;
 let __basedir = path.resolve();
-var generator = require("generate-password");
-const nodemailer = require("nodemailer");
-exports.register = async (req, res) => {
+console.log("email", email);
+console.log("name", name);
+
+const register = async (req, res) => {
   try {
     var password = generator.generate({
       length: 10,
@@ -23,13 +26,13 @@ exports.register = async (req, res) => {
     });
     console.log(password);
     let transporter = nodemailer.createTransport({
+      service: "gmail",
       host: "smtp.gmail.com",
       port: 465,
       secure: true,
-      service: "gmail",
       auth: {
-        user: process.env.USER,
-        pass: process.env.PASS,
+        user: email,
+        pass: name,
       },
       tls: {
         rejectUnauthorized: false,
@@ -37,7 +40,7 @@ exports.register = async (req, res) => {
     });
     // console.log("transporter", transporter);
     let mailOptions = {
-      from: process.env.USER,
+      from: email,
       to: req.body.email,
       subject: "password verification",
       text: "use this password for signup" + password,
@@ -60,7 +63,7 @@ exports.register = async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 };
-exports.csvfileUpload = async (req, res) => {
+const csvfileUpload = async (req, res) => {
   try {
     let Tutorial = [];
     let path = __basedir + "/file/" + req.file.filename;
@@ -89,7 +92,7 @@ exports.csvfileUpload = async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 };
-exports.login = async (req, res) => {
+const login = async (req, res) => {
   try {
     const user = await Login.findOne({ email: req.body.email });
     if (!user) {
@@ -108,7 +111,7 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.getid = async function (req, res) {
+const getid = async (req, res) => {
   try {
     const notes = await Login.findById(req.params.id);
     if (!notes) throw new Error("data not find ");
@@ -119,7 +122,7 @@ exports.getid = async function (req, res) {
     res.status(400).json({ success: false, message: err.message });
   }
 };
-exports.update = async function (req, res) {
+const update = async (req, res) => {
   try {
     const notes = await Login.findByIdAndUpdate(
       { _id: req.params.id },
@@ -135,7 +138,7 @@ exports.update = async function (req, res) {
     res.status(400).json({ success: false, message: error.message });
   }
 };
-exports.pop = async function (req, res) {
+const pop = async (req, res) => {
   try {
     console.log(req.params.id);
     const user = await Login.findByIdAndDelete({ _id: req.params.id });
@@ -150,8 +153,8 @@ exports.pop = async function (req, res) {
   }
 };
 
-exports.profileurlpath = async (req, res) => {
-  upload(req, res, async function (err) {
+const profileurlpath = async (req, res) => {
+  upload(req, res, async (err) => {
     try {
       const body = { ...req.body, profile_url: req.file.filename };
       const user = await Login.create(body);
@@ -168,3 +171,5 @@ exports.profileurlpath = async (req, res) => {
     }
   });
 };
+
+export { register, csvfileUpload, login, getid, update, pop, profileurlpath };

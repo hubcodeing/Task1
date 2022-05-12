@@ -1,8 +1,6 @@
-const express = require("express");
-const req = require("express/lib/request");
-const app = express();
+import express from "express";
 const router = express.Router();
-const {
+import {
   user,
   get,
   update,
@@ -16,10 +14,9 @@ const {
   getid,
   combine,
   jjj,
-} = require("../controller/notes");
-const { userNotesSchema } = require("../middleware/joi");
-const Notes = require("../models/notes");
-const auth = require("../middleware/auth");
+} from "../controller/notes";
+import { userNotesSchema } from "../middleware/joi";
+import auth from "../middleware/auth";
 
 router.post("/", auth, userNotesSchema, user);
 
@@ -47,4 +44,4 @@ router.get("/look", auth, look);
 
 router.get("/lookup", auth, lookup);
 
-module.exports = router;
+export default router;

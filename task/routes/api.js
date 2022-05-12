@@ -1,8 +1,6 @@
-const express = require("express");
-const res = require("express/lib/response");
-const app = express();
+import express from "express";
 const router = express.Router();
-const {
+import {
   login,
   register,
   getid,
@@ -10,10 +8,10 @@ const {
   pop,
   csvfileUpload,
   profileurlpath,
-} = require("../controller/user");
-const { userRegistrationSchema } = require("../middleware/joi");
-const auth = require("../middleware/auth");
-const upload = require("../middleware/upload");
+} from "../controller/user";
+import { userRegistrationSchema } from "../middleware/joi";
+import auth from "../middleware/auth";
+import upload from "../middleware/upload";
 
 router.post("/photo", profileurlpath);
 router.put("/update/:id", auth, userRegistrationSchema, update);
@@ -23,4 +21,4 @@ router.post("/login", login);
 router.get("/getid/:id", auth, getid);
 router.delete("/delete/:id", auth, pop);
 
-module.exports = router;
+export default router;

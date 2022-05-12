@@ -1,4 +1,4 @@
-const winston = require("winston");
+import winston from "winston";
 require("dotenv").config();
 const info = new Date().toDateString() + "-" + "info";
 const error = new Date().toDateString() + "-" + "error";

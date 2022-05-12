@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const Login = require("../models/user");
+import jwt from "jsonwebtoken";
+import Login from "../models/user";
 require("dotenv").config();
 const secret = process.env.SECRET;
 const auth = async (req, res, next) => {
@@ -20,4 +20,4 @@ const auth = async (req, res, next) => {
     res.status(400).send({ success: false, message: error.message });
   }
 };
-module.exports = auth;
+export default auth;

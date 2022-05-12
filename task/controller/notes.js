@@ -1,9 +1,9 @@
-const { default: mongoose } = require("mongoose");
-const Notes = require("../models/notes");
-const Login = require("../models/user");
-const { ObjectId } = require("mongodb");
-const { infoLogger, errorLogger } = require("../../logger");
-exports.user = async (req, res) => {
+import mongoose from "mongoose";
+import Notes from "../models/notes";
+import Login from "../models/user";
+import ObjectId from "mongodb";
+import { infoLogger, errorLogger } from "../../logger";
+const user = async (req, res) => {
   try {
     infoLogger.info(req.body, req.user._id);
     const notes = await Notes({ ...req.body, userId: req.user._id });
@@ -16,7 +16,7 @@ exports.user = async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 };
-exports.get = async function (req, res) {
+const get = async (req, res) => {
   try {
     const notes = await Notes.find({});
     res.status(200).json({ success: true, message: "data get", notes });
@@ -25,7 +25,7 @@ exports.get = async function (req, res) {
     res.status(400).json({ success: false, message: err.message });
   }
 };
-exports.getid = async function (req, res) {
+const getid = async (req, res) => {
   try {
     infoLogger.info(req.params.id);
     const notes = await Notes.findById(req.params.id);
@@ -37,7 +37,7 @@ exports.getid = async function (req, res) {
   }
 };
 
-exports.update = async function (req, res) {
+const update = async (req, res) => {
   try {
     const id = await Notes.findById(req.params.id);
     if (!id) throw new Error("id is not find");
@@ -57,7 +57,7 @@ exports.update = async function (req, res) {
   }
 };
 
-exports.note = async function (req, res) {
+const note = async (req, res) => {
   try {
     const notes = await Notes.findByIdAndDelete(req.params.id);
     if (!notes) throw new Error("id is not found");
@@ -72,7 +72,7 @@ exports.note = async function (req, res) {
   }
 };
 
-exports.match = async function (req, res) {
+const match = async (req, res) => {
   try {
     const notes = await Notes.aggregate([
       { $match: { _id: mongoose.Types.ObjectId(req.body.id) } },
@@ -84,7 +84,7 @@ exports.match = async function (req, res) {
     res.status(400).json({ success: false, message: err.message });
   }
 };
-exports.project = async function (req, res) {
+const project = async (req, res) => {
   try {
     const notes = await Notes.aggregate([
       { $project: { _id: 0, discription: 1 } },
@@ -98,7 +98,7 @@ exports.project = async function (req, res) {
   }
 };
 
-exports.addfilds = async function (req, res) {
+const addfilds = async (req, res) => {
   try {
     const notes = await Notes.aggregate([{ $addFields: { age: 50 } }]);
     infoLogger.info(notes);
@@ -108,7 +108,7 @@ exports.addfilds = async function (req, res) {
     res.status(400).json({ success: false, message: err.message });
   }
 };
-exports.size = async function (req, res) {
+const size = async (req, res) => {
   try {
     const notes = await Notes.aggregate([
       {
@@ -132,7 +132,7 @@ exports.size = async function (req, res) {
   }
 };
 
-exports.look = async function (req, res) {
+const look = async (req, res) => {
   try {
     const notes = await Notes.aggregate([
       {
@@ -163,7 +163,7 @@ exports.look = async function (req, res) {
     res.status(400).json({ success: false, message: err.message });
   }
 };
-exports.lookup = async function (req, res) {
+const lookup = async (req, res) => {
   try {
     const notes = await Login.aggregate([
       {
@@ -189,7 +189,7 @@ exports.lookup = async function (req, res) {
     res.status(400).json({ success: false, message: err.message });
   }
 };
-exports.combine = async function (req, res) {
+const combine = async (req, res) => {
   try {
     const id = req.body.id;
     if (!id) {
@@ -206,7 +206,7 @@ exports.combine = async function (req, res) {
     res.status(400).json({ success: false, message: err.message });
   }
 };
-exports.jjj = async function (req, res) {
+const jjj = async (req, res) => {
   try {
     let filter = {};
     if (req.query.title) {
@@ -225,4 +225,20 @@ exports.jjj = async function (req, res) {
     errorLogger.error(err.message);
     res.status(400).json({ success: false, message: err.message });
   }
+};
+
+export {
+  user,
+  get,
+  getid,
+  update,
+  note,
+  match,
+  project,
+  addfilds,
+  size,
+  look,
+  lookup,
+  combine,
+  jjj,
 };

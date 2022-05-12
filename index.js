@@ -1,11 +1,11 @@
-const express = require("express");
-const app = express();
-const api = require("./task/routes/api");
-const notes = require("./task/routes/notes");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const { infoLogger, errorLogger } = require("./logger");
+import express from "express";
+import api from "./task/routes/api";
+import notes from "./task/routes/notes";
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import { infoLogger, errorLogger } from "./logger";
 require("dotenv").config();
+const app = express();
 const port = process.env.PORT;
 const host = process.env.HOST;
 const db = `${host}`;
