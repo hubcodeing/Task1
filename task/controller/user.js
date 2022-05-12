@@ -153,15 +153,6 @@ exports.pop = async function (req, res) {
 exports.profileurlpath = async (req, res) => {
   upload(req, res, async function (err) {
     try {
-      // let user = new Login();
-      // console.log(user);
-      // user.name = req.body.name;
-      // user.email = req.body.email;
-      // user.password = req.body.password;
-      // user.phone = req.body.phone;
-      // user.profile_file = req.file.filename;
-      // user.profile_url = req.file.filename;
-      // user.save();
       const body = { ...req.body, profile_url: req.file.filename };
       const user = await Login.create(body);
 
