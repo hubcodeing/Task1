@@ -5,7 +5,6 @@ const userRegistrationSchema = async (req, res, next) => {
   const Schema = Joi.object().keys({
     name: Joi.string().min(3).max(40).required(),
     email: Joi.string().email().required(),
-    password: Joi.string().min(8).max(10).required(),
     phone: Joi.string().min(10).required(),
     profile_file: Joi.string(),
   });
