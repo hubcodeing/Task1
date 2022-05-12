@@ -8,12 +8,49 @@ const { user } = require("./notes");
 const { insertMany, remove } = require("../models/user");
 require("dotenv").config();
 const secret = process.env.SECRET;
+const HOST = process.env.HOST;
+const upload = require("../middleware/upload");
+
 const employee = require("../models/employee");
 let __basedir = path.resolve();
-
+var generator = require("generate-password");
+const nodemailer = require("nodemailer");
 exports.register = async (req, res) => {
   try {
-    let user = await Login.create(req.body, req.files);
+    var password = generator.generate({
+      length: 10,
+      numbers: true,
+    });
+    console.log(password);
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      service: "gmail",
+      auth: {
+        user: process.env.USER,
+        pass: process.env.PASS,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+    // console.log("transporter", transporter);
+    let mailOptions = {
+      from: process.env.USER,
+      to: req.body.email,
+      subject: "password verification",
+      text: "use this password for signup" + password,
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("error send me", error);
+      }
+      console.log("info me", info);
+      res.render("contact", { message: "Email has been sent" });
+    });
+
+    let user = await Login.create({ ...req.body, password });
     infoLogger.info(user);
     res
       .status(200)
@@ -111,4 +148,32 @@ exports.pop = async function (req, res) {
 
     res.status(400).json({ success: false, message: err.message });
   }
+};
+
+exports.profileurlpath = async (req, res) => {
+  upload(req, res, async function (err) {
+    try {
+      // let user = new Login();
+      // console.log(user);
+      // user.name = req.body.name;
+      // user.email = req.body.email;
+      // user.password = req.body.password;
+      // user.phone = req.body.phone;
+      // user.profile_file = req.file.filename;
+      // user.profile_url = req.file.filename;
+      // user.save();
+      const body = { ...req.body, profile_url: req.file.filename };
+      const user = await Login.create(body);
+
+      console.log(user);
+      res.status(200).json({
+        success: true,
+        message: "photo upload successfully",
+        user,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ success: false, message: "Please select photo" });
+    }
+  });
 };
